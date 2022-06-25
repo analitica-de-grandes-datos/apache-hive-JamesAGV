@@ -47,8 +47,9 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 */
 
 DROP TABLE IF EXISTS salida;
+DROP TABLE IF EXISTS intermedio;
 
-CREATE TABLE salida
+CREATE TABLE intermedio
 AS
 SELECT 
     c1, 
@@ -59,6 +60,12 @@ LATERAL VIEW
     explode(c5) tbl0 AS exploded
 GROUP BY c1;
 
+CREATE TABLE salida
+AS
+SELECT elementos FROM intermedio;
+
+
+
 INSERT OVERWRITE LOCAL DIRECTORY './output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-SELECT elementos FROM salida;
+SELECT elementos AS c5 FROM salida;
