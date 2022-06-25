@@ -46,3 +46,19 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
     >>> Escriba su respuesta a partir de este punto <<<
 */
 
+DROP TABLE IF EXISTS salida;
+
+CREATE TABLE salida
+AS
+SELECT 
+    c1, 
+    collect_list(upper(exploded)) AS elementos
+FROM 
+    tbl0 
+LATERAL VIEW 
+    explode(c5) tbl0 AS exploded
+GROUP BY c1;
+
+INSERT OVERWRITE LOCAL DIRECTORY './output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT elementos FROM salida;
