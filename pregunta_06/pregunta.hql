@@ -49,23 +49,18 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 DROP TABLE IF EXISTS salida;
 DROP TABLE IF EXISTS intermedio;
 
-CREATE TABLE intermedio
+CREATE TABLE salida
 AS
 SELECT 
     c1, 
-    collect_list(upper(exploded)) AS elementos
+    concat_ws(':',collect_list(upper(exploded))) AS elementos
 FROM 
     tbl0 
 LATERAL VIEW 
     explode(c5) tbl0 AS exploded
 GROUP BY c1;
 
-CREATE TABLE salida
-AS
-SELECT elementos FROM intermedio;
-
-
 
 INSERT OVERWRITE LOCAL DIRECTORY './output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-SELECT elementos AS c5 FROM salida;
+SELECT elementos FROM salida;
