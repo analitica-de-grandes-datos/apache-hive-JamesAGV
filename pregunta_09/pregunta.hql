@@ -1,3 +1,4 @@
+
 /*
 
 Pregunta
@@ -46,3 +47,22 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
     >>> Escriba su respuesta a partir de este punto <<<
 */
 
+DROP TABLE IF EXISTS salida;
+
+CREATE TABLE salida
+AS
+SELECT 
+    t0.c1,
+    t0.c2,
+    t1.c4[t0.c2]    
+FROM 
+    tbl0 t0
+JOIN
+    tbl1 t1
+ON (t0.c1=t1.c1);
+
+
+
+INSERT OVERWRITE LOCAL DIRECTORY './output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM salida;
